@@ -1,12 +1,12 @@
 [package]
-name = "anchor"
+name = "nft_marketplace"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "anchor"
+name = "nft_marketplace"
 
 [features]
 default = []
@@ -19,9 +19,10 @@ anchor-debug = []
 custom-heap = []
 custom-panic = []
 
-
 [dependencies]
 anchor-lang = "0.31.1"
+anchor-spl = "0.29.0"
+mpl-token-metadata = "1.13.2"
 
 
 [lints.rust]
