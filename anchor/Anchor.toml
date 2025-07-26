@@ -8,11 +8,11 @@ skip-lint = false
 [programs.localnet]
 anchor = "HucP1Je7SSWCPc2H9h3C8cTnRqjXcjieVxKK2jo9TuMH"
 
-[programs.devnet]
-nft_marketplace = "Your_Program_ID_Here"
+#[programs.devnet]
+#nft_marketplace = "Your_Program_ID_Here"
 
-[programs.mainnet]
-nft_marketplace = "Your_Program_ID_Here"
+#[programs.mainnet]
+#nft_marketplace = "Your_Program_ID_Here"
 
 [registry]
 url = "https://api.apr.dev"
