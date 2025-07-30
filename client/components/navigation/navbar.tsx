@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Menu, X, Sun, Moon, ArrowRight } from 'lucide-react'
 import { useTheme } from 'next-themes'
@@ -49,6 +49,11 @@ export function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <motion.nav
@@ -89,11 +94,10 @@ export function Navbar() {
                   className="flex items-center space-x-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <span>{item.name}</span>
-                  {item.hasDropdown && (
+                  {item.hasDropdown && isMounted && (
                     <ChevronDown className="h-4 w-4 transition-transform duration-200" />
                   )}
                 </Link>
-
                 {/* Dropdown */}
                 <AnimatePresence>
                   {item.hasDropdown && activeDropdown === item.name && (
