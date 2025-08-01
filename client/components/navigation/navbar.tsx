@@ -5,37 +5,39 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Menu, X, Sun, Moon, ArrowRight } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { Coins } from 'lucide-react'
 
 const navigationItems = [
   {
     name: 'Marketplace',
-    href: '#',
+    href: '/market',
     hasDropdown: true,
     items: [
-      { name: 'Browse NFTs', href: '#' },
-      { name: 'Top Collections', href: '#' },
-      { name: 'New Drops', href: '#' },
+      { name: 'Browse NFTs', href: '/explore' },
+      { name: 'Top Collections', href: '/market' },
+      { name: 'New Drops', href: '/market' },
     ]
   },
   {
     name: 'Create',
-    href: '#',
+    href: '/created-nfts',
     hasDropdown: true,
     items: [
-      { name: 'Mint NFT', href: '#' },
-      { name: 'Create Collection', href: '#' },
-      { name: 'Launchpad', href: '#' },
+      { name: 'Mint NFT', href: '/dashboard' },
+      { name: 'Create Collection', href: '/dashboard' },
+      { name: 'Launchpad', href: '/dashboard' },
     ]
   },
   {
     name: 'Analytics',
-    href: '#',
+    href: '/dashboard',
     hasDropdown: true,
     items: [
-      { name: 'Market Stats', href: '#' },
-      { name: 'Portfolio Tracker', href: '#' },
-      { name: 'Price History', href: '#' },
+      { name: 'Market Stats', href: '/explore' },
+      { name: 'Portfolio Tracker', href: '/explore' },
+      { name: 'Price History', href: '/explore' },
     ]
   },
   {
@@ -50,6 +52,13 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
   const [isMounted, setIsMounted] = useState(false);
+
+  const { wallet, publicKey } = useWallet();
+  const { setVisible } = useWalletModal();
+
+  const handleClick = () => {
+    if (!publicKey) setVisible(true);
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -71,10 +80,10 @@ export function Navbar() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center space-x-2 cursor-pointer"
           >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-bright to-cyan-light">
-            <Coins className="h-6 w-6 text-white dark:text-slate-800" />
-          </div>
-            <span className="text-xl font-bold text-foreground">Mintly</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-bright to-cyan-light">
+              <Coins className="h-6 w-6 text-white dark:text-slate-800" />
+            </div>
+            <Link href={"/"} className="text-xl font-bold text-foreground">Mintly</Link>
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -182,6 +191,10 @@ export function Navbar() {
               <div className="pt-4 border-t border-border">
                 <Link
                   href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setVisible(true); 
+                  }}
                   className="block text-sm font-medium text-muted-foreground hover:text-foreground mb-2"
                 >
                   Connect Wallet

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, TrendingUp, Shield } from 'lucide-react'
+import Link from 'next/link'
 
 export function HeroSection() {
   return (
@@ -104,7 +105,7 @@ export function HeroSection() {
             whileTap={{ scale: 0.95 }}
             className="group inline-flex items-center space-x-2 rounded-xl border border-solana-purple/50 bg-transparent px-8 py-3 text-sm font-semibold text-foreground transition-all hover:bg-solana-purple/10 hover:border-solana-purple"
           >
-            <span>Explore NFTs</span>
+            <Link href={"/explore"}>Explore NFTs</Link>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </motion.button>
 
@@ -114,7 +115,7 @@ export function HeroSection() {
             whileTap={{ scale: 0.95 }}
             className="group inline-flex text-foreground items-center space-x-2 rounded-xl text-grad px-8 py-3 text-sm font-semibold dark:text-white transition-all hover:shadow-lg nft-glow"
           >
-            <span>Create NFT</span>
+            <Link href={"/explore"}>Create NFT</Link>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </motion.button>
         </motion.div>

@@ -68,7 +68,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Coins className="h-6 w-6 text-white dark:text-slate-800" />
               </div>
               {!collapsed && (
-                <span className="text-xl font-bold text-foreground">Mintly</span>
+                <Link href={"/"} className="text-xl font-bold text-foreground">Mintly</Link>
               )}
             </motion.div>
             <button
