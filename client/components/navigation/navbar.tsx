@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Menu, X, Sun, Moon, ArrowRight } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Coins } from 'lucide-react'
+import { Wallet } from "lucide-react";
+import { WalletButton } from "@/components/providers/wallet-provider";
 
 const navigationItems = [
   {
@@ -53,12 +54,7 @@ export function Navbar() {
   const { theme, setTheme } = useTheme()
   const [isMounted, setIsMounted] = useState(false);
 
-  const { wallet, publicKey } = useWallet();
-  const { setVisible } = useWalletModal();
-
-  const handleClick = () => {
-    if (!publicKey) setVisible(true);
-  };
+  const { connected } = useWallet();
 
   useEffect(() => {
     setIsMounted(true);
@@ -148,13 +144,14 @@ export function Navbar() {
             >
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <Link
-              href="#"
-              className="inline-flex items-center space-x-2 rounded-xl bg-cyan-bright px-4 py-2 text-sm font-semibold text-slate-800 transition-all hover:bg-cyan-light hover:scale-105"
-            >
-              <span>Connect Wallet</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {connected ? (
+              <WalletButton className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl" />
+            ) : (
+              <WalletButton className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl">
+                <Wallet className="h-4 w-4 mr-2" />
+                Connect Wallet
+              </WalletButton>
+            )}
           </motion.div>
 
           {/* Mobile menu button */}
@@ -189,16 +186,14 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="pt-4 border-t border-border">
-                <Link
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setVisible(true); 
-                  }}
-                  className="block text-sm font-medium text-muted-foreground hover:text-foreground mb-2"
-                >
-                  Connect Wallet
-                </Link>
+                {connected ? (
+                  <WalletButton className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl" />
+                ) : (
+                  <WalletButton className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl">
+                    <Wallet className="h-4 w-4 mr-2" />
+                    Connect Wallet
+                  </WalletButton>
+                )}
                 <Link
                   href="#"
                   className="inline-flex items-center space-x-2 rounded-xl solana-gradient px-4 py-2 text-sm font-semibold text-white"
