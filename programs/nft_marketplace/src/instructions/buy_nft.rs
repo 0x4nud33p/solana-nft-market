@@ -1,17 +1,62 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{associated_token::AssociatedToken, token::{Token, TokenAccount, Mint}};
-use crate::{state::*, errors::*};
+use anchor_lang::system_program::{transfer, Transfer};
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token::{self, Mint, Token, TokenAccount, Transfer as TokenTransfer},
+};
+use crate::{
+    errors::*,
+    state::*,
+    constants::{MARKETPLACE_SEED, LISTING_SEED, NFT_METADATA_SEED},
+};
 
 pub fn handle(ctx: Context<BuyNft>) -> Result<()> {
     let listing = &mut ctx.accounts.listing;
+
     require!(listing.is_active, MarketplaceError::ListingNotActive);
 
     listing.is_active = false;
 
-    let lamports = listing.price;
-    **ctx.accounts.seller.try_borrow_mut_lamports()? += lamports * 95 / 100;
-    **ctx.accounts.marketplace_authority.try_borrow_mut_lamports()? += lamports * 5 / 100;
-    **ctx.accounts.buyer.try_borrow_mut_lamports()? -= lamports;
+    let price = listing.price;
+    let seller_amount = price * 95 / 100;
+    let fee_amount = price - seller_amount;
+
+    // Transfer SOL from buyer to seller
+    transfer(
+        CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            Transfer {
+                from: ctx.accounts.buyer.to_account_info(),
+                to: ctx.accounts.seller.to_account_info(),
+            },
+        ),
+        seller_amount,
+    )?;
+
+    // Transfer SOL from buyer to marketplace authority
+    transfer(
+        CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            Transfer {
+                from: ctx.accounts.buyer.to_account_info(),
+                to: ctx.accounts.marketplace_authority.to_account_info(),
+            },
+        ),
+        fee_amount,
+    )?;
+
+    // Transfer NFT from seller to buyer
+    token::transfer(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            TokenTransfer {
+                from: ctx.accounts.seller_token_account.to_account_info(),
+                to: ctx.accounts.buyer_token_account.to_account_info(),
+                authority: ctx.accounts.seller.to_account_info(),
+            },
+        ),
+        1, // Transfer exactly 1 NFT
+    )?;
 
     Ok(())
 }
@@ -20,21 +65,21 @@ pub fn handle(ctx: Context<BuyNft>) -> Result<()> {
 pub struct BuyNft<'info> {
     #[account(
         mut,
-        seeds = [b"listing", mint.key().as_ref()],
+        seeds = [LISTING_SEED, mint.key().as_ref()],
         bump = listing.bump
     )]
     pub listing: Account<'info, Listing>,
 
     #[account(
         mut,
-        seeds = [b"marketplace"],
+        seeds = [MARKETPLACE_SEED],
         bump = marketplace.bump
     )]
     pub marketplace: Account<'info, Marketplace>,
 
     #[account(
         mut,
-        seeds = [b"nft_metadata", mint.key().as_ref()],
+        seeds = [NFT_METADATA_SEED, mint.key().as_ref()],
         bump = nft_metadata.bump
     )]
     pub nft_metadata: Account<'info, NftMetadata>,
@@ -52,11 +97,11 @@ pub struct BuyNft<'info> {
     )]
     pub buyer_token_account: Account<'info, TokenAccount>,
 
-    /// CHECK:
+    /// CHECK: SOL recipient
     #[account(mut)]
     pub seller: UncheckedAccount<'info>,
 
-    /// CHECK:
+    /// CHECK: Marketplace fee collector
     #[account(mut)]
     pub marketplace_authority: UncheckedAccount<'info>,
 

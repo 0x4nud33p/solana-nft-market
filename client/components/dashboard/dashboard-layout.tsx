@@ -10,8 +10,6 @@ import {
   History, 
   Wallet, 
   Settings, 
-  Clock,
-  Wrench,
   ChevronLeft,
   ChevronRight,
   Coins
@@ -19,6 +17,8 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { WalletButton } from "@/components/providers/wallet-provider";
 
 const sidebarItems = [
   {
@@ -47,6 +47,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+   const { connected } = useWallet();
 
   return (
     <div className="flex h-screen bg-background">
@@ -137,18 +138,26 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </nav>
 
         {/* Footer */}
-        {/* <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border">
           <div className="text-xs text-muted-foreground">
             {!collapsed && (
               <>
-                <div className="flex items-center space-x-1 mb-1">
+                {/* <div className="flex items-center space-x-1 mb-1">
                   <span>Made By</span>
                 <div className="text-solana-purple">@Mintly</div>
-                </div>
+                </div> */}
+                {connected ? (
+                              <WalletButton className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl" />
+                            ) : (
+                              <WalletButton className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl">
+                                <Wallet className="h-4 w-4 mr-2" />
+                                Connect Wallet
+                              </WalletButton>
+                            )}
               </>
             )}
           </div>
-        </div> */}
+        </div>
       </motion.aside>
 
       {/* Main Content */}
