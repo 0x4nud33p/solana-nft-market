@@ -17,8 +17,8 @@ const navigationItems = [
     hasDropdown: true,
     items: [
       { name: 'Browse NFTs', href: '/explore' },
-      { name: 'Top Collections', href: '/market' },
-      { name: 'New Drops', href: '/market' },
+      // { name: 'Top Collections', href: '/market' },
+      // { name: 'New Drops', href: '/market' },
     ]
   },
   {
@@ -27,18 +27,18 @@ const navigationItems = [
     hasDropdown: true,
     items: [
       { name: 'Mint NFT', href: '/dashboard' },
-      { name: 'Create Collection', href: '/dashboard' },
-      { name: 'Launchpad', href: '/dashboard' },
+      // { name: 'Create Collection', href: '/dashboard' },
+      // { name: 'Launchpad', href: '/dashboard' },
     ]
   },
   {
     name: 'Analytics',
-    href: '/dashboard',
+    href: '/market',
     hasDropdown: true,
     items: [
-      { name: 'Market Stats', href: '/explore' },
+      // { name: 'Market Stats', href: '/explore' },
       { name: 'Portfolio Tracker', href: '/explore' },
-      { name: 'Price History', href: '/explore' },
+      // { name: 'Price History', href: '/explore' },
     ]
   },
   {

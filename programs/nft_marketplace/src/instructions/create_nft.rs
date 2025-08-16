@@ -20,5 +20,5 @@ pub fn handle(
 
 #[derive(Accounts)]
 pub struct CreateNft<'info> {
-    // (your full accounts here)
+    
 }

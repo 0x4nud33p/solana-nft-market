@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 pub struct Marketplace {
     pub authority: Pubkey,
-    pub fee_percentage: u16, // Basis points (e.g., 250 = 2.5%)
+    pub fee_percentage: u16,
     pub total_sales: u64,
     pub total_volume: u64,
     pub bump: u8,
