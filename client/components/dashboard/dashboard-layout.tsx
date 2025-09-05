@@ -19,6 +19,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletButton } from "@/components/providers/wallet-provider";
+import { CreateModal } from '../modals/create-modal'
 
 const sidebarItems = [
   {
@@ -46,12 +47,17 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false)
+  const [openCreateModal, setOpenCreateModal] = useState(false)
   const pathname = usePathname()
    const { connected } = useWallet();
 
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
+      <CreateModal 
+        isOpen={openCreateModal} 
+        onClose={() => setOpenCreateModal(false)} 
+      />
       <motion.aside
         animate={{ width: collapsed ? 80 : 280 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -95,7 +101,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               collapsed && "px-3"
             )}
           >
-            <div className="flex items-center justify-center space-x-2">
+            <div onClick={() => setOpenCreateModal(true)} className="flex items-center justify-center space-x-2">
               <Plus className="w-4 h-4" />
               {!collapsed && <span>Create</span>}
             </div>
